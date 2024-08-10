@@ -1,100 +1,100 @@
 <?php
-include("db.php");
+include('db.php');
 
-// Add new User
+// Add new user
 if (isset($_POST['save_newuser'])) {
-    try {
-        $name = mysqli_real_escape_string($conn, $_POST['name']);
-        $reg = mysqli_real_escape_string($conn, $_POST['reg']);
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $reg = mysqli_real_escape_string($conn, $_POST['reg']);
 
-        $query = "INSERT INTO student_info(name, reg) VALUES ('$name', '$reg')";
-
-        if (mysqli_query($conn, $query)) {
-            $res = [
-                'status' => 200,
-                'message' => 'Details Updated Successfully'
-            ];
-            echo json_encode($res);
-        } else {
-            throw new Exception('Query Failed: ' . mysqli_error($conn));
-        }
-    } catch (Exception $e) {
-        $res = [
-            'status' => 500,
-            'message' => 'Error: ' . $e->getMessage()
-        ];
-        echo json_encode($res);
-    }
-}
-
-// Delete User
-if (isset($_POST['delete_user'])) {
-    $student_id = mysqli_real_escape_string($conn, $_POST['user_id']);
-  
-    $query = "DELETE FROM student_info WHERE id='$student_id'";
+    $query = "INSERT INTO student_info (name, reg) VALUES ('$name', '$reg')";
     $query_run = mysqli_query($conn, $query);
-  
+
     if ($query_run) {
-        $res = [
+        $response = [
             'status' => 200,
-            'message' => 'Details Deleted Successfully'
+            'message' => 'User added successfully!'
         ];
-        echo json_encode($res);
-        return;
     } else {
-        $res = [
+        $response = [
             'status' => 500,
-            'message' => 'Details Not Deleted'
+            'message' => 'User addition failed!'
         ];
-        echo json_encode($res);
-        return;
     }
+
+    echo json_encode($response);
+    exit();
 }
 
-// Update User
-if (isset($_GET['get_user'])) {
-    $student_id = mysqli_real_escape_string($conn, $_GET['user_id']);
-    $query = "SELECT * FROM student_info WHERE id='$student_id'";
+// Delete user
+if (isset($_POST['delete_user'])) {
+    $user_id = mysqli_real_escape_string($conn, $_POST['user_id']);
+
+    $query = "DELETE FROM student_info WHERE id='$user_id'";
     $query_run = mysqli_query($conn, $query);
 
-    if ($query_run && mysqli_num_rows($query_run) > 0) {
-        $user = mysqli_fetch_assoc($query_run);
-        $res = [
+    if ($query_run) {
+        $response = [
+            'status' => 200,
+            'message' => 'User deleted successfully!'
+        ];
+    } else {
+        $response = [
+            'status' => 500,
+            'message' => 'User deletion failed!'
+        ];
+    }
+
+    echo json_encode($response);
+    exit();
+}
+
+// Get user data for editing
+if (isset($_GET['get_user'])) {
+    $user_id = mysqli_real_escape_string($conn, $_GET['user_id']);
+
+    $query = "SELECT * FROM student_info WHERE id='$user_id'";
+    $query_run = mysqli_query($conn, $query);
+
+    if (mysqli_num_rows($query_run) == 1) {
+        $user = mysqli_fetch_array($query_run);
+
+        $response = [
             'status' => 200,
             'data' => $user
         ];
     } else {
-        $res = [
-            'status' => 500,
-            'message' => 'User Not Found'
+        $response = [
+            'status' => 404,
+            'message' => 'User not found!'
         ];
     }
-    echo json_encode($res);
+
+    echo json_encode($response);
+    exit();
 }
 
+// Update user data
 if (isset($_POST['update_user'])) {
-    try {
-        $id = mysqli_real_escape_string($conn, $_POST['user_id']);
-        $name = mysqli_real_escape_string($conn, $_POST['name']);
-        $reg = mysqli_real_escape_string($conn, $_POST['reg']);
+    $user_id = mysqli_real_escape_string($conn, $_POST['user_id']);
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $reg = mysqli_real_escape_string($conn, $_POST['reg']);
 
-        $query = "UPDATE student_info SET name='$name', reg='$reg' WHERE id='$id'";
+    $query = "UPDATE student_info SET name='$name', reg='$reg' WHERE id='$user_id'";
+    $query_run = mysqli_query($conn, $query);
 
-        if (mysqli_query($conn, $query)) {
-            $res = [
-                'status' => 200,
-                'message' => 'Details Updated Successfully'
-            ];
-            echo json_encode($res);
-        } else {
-            throw new Exception('Query Failed: ' . mysqli_error($conn));
-        }
-    } catch (Exception $e) {
-        $res = [
-            'status' => 500,
-            'message' => 'Error: ' . $e->getMessage()
+    if ($query_run) {
+        $response = [
+            'status' => 200,
+            'message' => 'User updated successfully!'
         ];
-        echo json_encode($res);
+    } else {
+        $response = [
+            'status' => 500,
+            'message' => 'User update failed!'
+        ];
     }
+
+    echo json_encode($response);
+    exit();
 }
 ?>

@@ -150,18 +150,20 @@ $result = mysqli_query($conn, $sql);
                     processData: false,
                     contentType: false,
                     success: function (response) {
+                        console.log("AJAX response received:", response); // Debugging output
                         var res = jQuery.parseJSON(response);
                         if (res.status == 200) {
                             $('#adduser').modal('hide');
                             $('#addnewuser')[0].reset();
-                            table.ajax.reload(); // Reload table data
+                            location.reload(); // Reload the page after adding user
                             alert(res.message);
                         } else if (res.status == 500) {
-                            $('#adduser').modal('hide');
-                            $('#addnewuser')[0].reset();
-                            console.error("Error:", res.message);
-                            alert("Something went wrong. Please try again.");
+                            alert("Error: " + res.message);
                         }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error:", status, error); // Handle errors
+                        alert("An error occurred. Please check the console for details.");
                     }
                 });
             });
@@ -178,12 +180,18 @@ $result = mysqli_query($conn, $sql);
                             'user_id': user_id
                         },
                         success: function (response) {
+                            console.log("Delete response:", response);
                             var res = jQuery.parseJSON(response);
-                            if (res.status == 500) {
+                            if (res.status == 200) {
+                                location.reload(); // Reload the page after deleting user
                                 alert(res.message);
                             } else {
-                                table.ajax.reload(); // Reload table data
+                                alert("Error: " + res.message);
                             }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("AJAX Error:", status, error); // Handle errors
+                            alert("An error occurred. Please check the console for details.");
                         }
                     });
                 }
@@ -198,6 +206,7 @@ $result = mysqli_query($conn, $sql);
                     url: "backend.php",
                     data: { 'get_user': true, 'user_id': user_id },
                     success: function (response) {
+                        console.log("Edit response:", response);
                         var res = jQuery.parseJSON(response);
                         if (res.status == 200) {
                             $('#edit_id').val(res.data.id);
@@ -205,8 +214,12 @@ $result = mysqli_query($conn, $sql);
                             $('#edit_reg').val(res.data.reg);
                             $('#edituser').modal('show');
                         } else {
-                            alert(res.message);
+                            alert("Error: " + res.message);
                         }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error:", status, error); // Handle errors
+                        alert("An error occurred. Please check the console for details.");
                     }
                 });
             });
@@ -222,16 +235,19 @@ $result = mysqli_query($conn, $sql);
                     processData: false,
                     contentType: false,
                     success: function (response) {
+                        console.log("Update response:", response);
                         var res = jQuery.parseJSON(response);
                         if (res.status == 200) {
                             $('#edituser').modal('hide');
-                            $('#editform')[0].reset();
-                            table.ajax.reload(); // Reload table data
+                            location.reload(); // Reload the page after updating user
                             alert(res.message);
                         } else if (res.status == 500) {
-                            console.error("Error:", res.message);
-                            alert("Something went wrong. Please try again.");
+                            alert("Error: " + res.message);
                         }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error:", status, error); // Handle errors
+                        alert("An error occurred. Please check the console for details.");
                     }
                 });
             });
