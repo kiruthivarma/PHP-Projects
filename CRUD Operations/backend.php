@@ -1,6 +1,6 @@
 <?php
 include('db.php');
-
+echo('Connection Found');
 // Add new user
 if (isset($_POST['save_newuser'])) {
     $name = mysqli_real_escape_string($conn, $_POST['name']);
