@@ -14,10 +14,61 @@ $result = mysqli_query($conn, $sql);
         .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0.5em 1em;
         }
+        
+        body {
+            background-color: #f8f9fa;
+        }
 
-        /* Hide the default search bar */
-        .dataTables_wrapper .dataTables_filter {
-            display: none;
+        h2 {
+            color: #007bff;
+        }
+
+        .table-responsive {
+            margin-top: 2em;
+        }
+
+        .input-group-text {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .input-group-text i {
+            margin-right: 0.3em;
+        }
+
+        .custom-search {
+            width: 300px;
+            margin-bottom: 1em;
+        }
+
+        .dataTables_length {
+            margin-bottom: 1.5em;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            padding: 0.5em 1em;
+        }
+
+        /* Custom styles for table */
+        table.dataTable thead {
+            background-color: #343a40;
+            color: #fff;
+        }
+
+        table.dataTable {
+            border-color: #dee2e6;
+        }
+
+        table.dataTable tbody tr {
+            background-color: #ffffff;
+        }
+
+        table.dataTable tbody tr:nth-child(odd) {
+            background-color: #f8f9fa;
+        }
+
+        .btn-primary, .btn-info, .btn-warning, .btn-danger {
+            margin: 0.2em;
         }
     </style>
 </head>
@@ -26,14 +77,6 @@ $result = mysqli_query($conn, $sql);
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="text-primary">Student Information</h2>
             <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#adduser">Add User</button>
-        </div>
-
-        <!-- Search Bar -->
-        <div class="mb-3">
-            <div class="input-group">
-                <input type="text" id="customSearch" class="form-control" placeholder="Search...">
-                <span class="input-group-text"><i class="bi bi-search"></i></span>
-            </div>
         </div>
 
         <div class="table-responsive">
@@ -133,11 +176,6 @@ $result = mysqli_query($conn, $sql);
     <script>
         $(document).ready(function () {
             var table = $('#user').DataTable();
-
-            // Custom search functionality
-            $('#customSearch').on('keyup', function () {
-                table.search(this.value).draw();
-            });
 
             $(document).on('submit', '#addnewuser', function (e) {
                 e.preventDefault();
